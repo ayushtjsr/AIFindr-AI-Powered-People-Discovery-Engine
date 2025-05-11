@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+  mysql:
+    ports:
+      - "3306:3306" # Exposing MySQL port to host
+
+  redis:
+    ports:
+      - "6379:6379" # Exposing Redis port to host
+
+  clickhouse:
+    ports:
+      - "8123:8123" # Exposing ClickHouse HTTP port to host
+      - "9000:9000" # Exposing ClickHouse Native Protocol port to host
+
+  backend:
+    environment:
+      AUTH_ENABLED: ${AUTH_ENABLED:-true}
+      AUTH_IS_AUTH0: ${AUTH_IS_AUTH0:-true}
+      AUTH_DOMAIN: ${AUTH_DOMAIN:-}
+      EXPERIMENT_RUNNER_URL: ${EXPERIMENT_RUNNER_URL:-}
+    ports:
+      - "8080:8080" # Exposing backend HTTP port to host
+      - "3003:3003" # Exposing backend OpenAPI specification port to host
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "--location", "--request", "GET", "http://localhost:8080/is-alive/ping" ]
+      interval: 1s
+      timeout: 1s
+      retries: 300
+
+  python-backend:
+    ports:
+      - "8000:8000" # Exposing Python backend HTTP port to host
+
+  frontend:
+    ports:
+      - "5173:5173" # Exposing frontend server port to host
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      AUTH_DOMAIN: ${AUTH_DOMAIN:-}
+      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID:-}
+      AUTH_AUDIENCE: ${AUTH_AUDIENCE:-}
+      AIFINDR_DOMAIN: ${AIFINDR_DOMAIN:-}
+      BACKEND_URL: ${BACKEND_URL:-http://backend:8080}
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "--location", "--request", "GET", "http://localhost:5173" ]
+      interval: 1s
+      timeout: 1s
+      retries: 300
+
+  aifindr-evaluations-runner:
+    env_file:
+      - ../../apps/aifindr-evaluations-runner/.env
