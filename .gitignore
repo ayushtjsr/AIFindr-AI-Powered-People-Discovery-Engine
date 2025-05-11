@@ -1,0 +1,65 @@
+#environment variables
+.env
+
+# Mac
+.DS_Store
+
+# IntelliJ
+.idea/
+*.iml
+
+# Maven
+target/
+**/dependency-reduced-pom.xml
+
+# BE related
+/apps/opik-backend/redoc/openapi.yaml
+
+# FE related
+/apps/opik-frontend/dist
+/apps/opik-frontend/build
+*.local
+
+# dependencies
+/apps/opik-frontend/node_modules
+/apps/opik-frontend/.pnp
+.pnp.js
+
+# testing
+/apps/opik-frontend/coverage
+
+# Vagrant
+**/.vagrant
+
+# debug
+/apps/opik-frontend/npm-debug.log*
+/apps/opik-frontend/yarn-debug.log*
+/apps/opik-frontend/yarn-error.log*
+
+# Python development
+*.egg
+*.egg-info
+dist
+build
+build/
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+__pycache__
+pip-log.txt
+.venv*
+.ipynb_checkpoints
+.python-version
+
+# VS Code
+.vscode
+
+# charts
+deployment/helm_chart/opik/charts
+deployment/helm_chart/opik/values-cloud-test.yaml
+deployment/helm_chart/opik/values-test.yaml
+temp
